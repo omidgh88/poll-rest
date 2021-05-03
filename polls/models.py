@@ -1,9 +1,11 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class Question(models.Model):
     title = models.CharField(max_length=255, null=False)
     is_active = models.BooleanField(default=True)
+    owner = models.ForeignKey(get_user_model(), related_name='questions', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.title
