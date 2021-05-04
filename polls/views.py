@@ -2,15 +2,15 @@ from polls.permissions import IsOwnerOrReadOnly
 from django.contrib.auth import get_user_model
 from .models import Question, Choice
 from .serializers import QuestionSerializer, ChoiceSerializer, UserSerializer
-from rest_framework import mixins, serializers
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
 
-class QuestionList(generics.ListCreateAPIView):
-    """list all Questions or generate new one
+class QuestionViewset(viewsets.ModelViewSet):
+    """This viewset automatically provides 
+    `list`, `create`, `retrieve`, `update` and `destroy` actions.
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -18,14 +18,6 @@ class QuestionList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-
-class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    """retrieve, update or delete an instance
-    """
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 class ChoiceList(generics.ListCreateAPIView):
@@ -47,20 +39,11 @@ class ChoiceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
-class UserList(generics.ListCreateAPIView):
-    """list all Users or generate new one
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """ This viewset automatically provides 'list' and 'retrieve' actions
     """
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    """retrieve, update or delete an instance
-    """
-    queryset = get_user_model().objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 @api_view(['GET'])
