@@ -1,7 +1,7 @@
 from polls.permissions import IsOwnerOrReadOnly
 from django.contrib.auth import get_user_model
-from .models import Question, Choice
-from .serializers import QuestionSerializer, ChoiceSerializer, UserSerializer
+from polls.models import Question, Choice
+from polls.serializers import QuestionSerializer, ChoiceSerializer, UserSerializer
 from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse

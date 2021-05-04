@@ -3,7 +3,7 @@ from django.db.models import query
 from django.contrib.auth import get_user_model
 from rest_framework import fields, serializers
 
-from .models import Question, Choice
+from polls.models import Question, Choice
 
 
 class QuestionSerializer(serializers.ModelSerializer):
