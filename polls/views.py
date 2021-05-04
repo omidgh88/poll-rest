@@ -1,8 +1,9 @@
+from polls.permissions import IsOwnerOrReadOnly
 from django.contrib.auth import get_user_model
 from .models import Question
 from .serializers import QuestionSerializer, UserSerializer
 from rest_framework import mixins, serializers
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 
 class QuestionList(generics.ListCreateAPIView):
@@ -10,6 +11,7 @@ class QuestionList(generics.ListCreateAPIView):
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -20,6 +22,7 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 class UserList(generics.ListCreateAPIView):
