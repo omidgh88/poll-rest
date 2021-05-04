@@ -1,9 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import query
-from django.contrib.auth import get_user_model
 from rest_framework import fields, serializers
 
-from polls.models import Question, Choice
+from .models import Choice, Question
 
 
 class QuestionSerializer(serializers.ModelSerializer):
