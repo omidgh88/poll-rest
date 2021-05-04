@@ -8,21 +8,22 @@ from .models import Question, Choice
 
 class QuestionSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(read_only=True, source='owner.username')
+    choices = serializers.HyperlinkedRelatedField(many=True, view_name='choice-detail', read_only=True)
 
     class Meta:
         model = Question
-        fields = ('id', 'title', 'owner', 'is_active')
+        fields = ('url', 'id', 'title', 'owner', 'is_active', 'choices')
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ('id', 'title', 'question_id', 'votes')
+        fields = ('url', 'id', 'title', 'question_id', 'votes')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    questions = serializers.HyperlinkedRelatedField(many=True, view_name='question-detail', read_only=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'questions')
+        fields = ('url', 'id', 'username', 'questions')
