@@ -1,3 +1,4 @@
+from .utils import query_reporter
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import api_view
@@ -13,12 +14,16 @@ class QuestionViewset(viewsets.ModelViewSet):
     """This viewset automatically provides 
     `list`, `create`, `retrieve`, `update` and `destroy` actions.
     """
-    queryset = Question.objects.all()
+    queryset = Question.objects.select_related('owner').prefetch_related('choices').all()
     serializer_class = QuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    # @query_reporter
+    # def list(self, request, *args, **kwargs):
+    #     super().list(self, request, *args, **kwargs)
 
 
 class ChoiceList(generics.ListCreateAPIView):
